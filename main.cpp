@@ -22,6 +22,8 @@ int main(int argc, char* argv[]) {
 
         if (nextline.at(0) == '#') {
           //DO Nothing, # = comment
+        } else if (tree == nullptr && nextline.at(0) != 'C') {
+          cout << "MUST CREATE TREE INSTANCE" << endl;
         } else if (nextline.at(0) == 'C') {
           tree = new BSTree<Word>;
           cout << "TREE CREATED" << endl;
@@ -32,74 +34,54 @@ int main(int argc, char* argv[]) {
             tree->clear();
             cout << "TREE CLEARED" << endl;
           }
-        } else if (nextline.at(0) == 'D') {
-          if (tree == nullptr) {
-            cout << "MUST CREATE TREE INSTANCE" << endl;
-          } else {
-            delete tree;
-            tree = nullptr;
-            cout << "TREE DELETED" << endl;
-          }
+        } else if (nextline.at(0) == 'D') {         
+          delete tree;
+          tree = nullptr;
+          cout << "TREE DELETED" << endl;
         } else if (nextline.at(0) == 'I') {
-          if (tree == nullptr) {
-            cout << "MUST CREATE TREE INSTANCE" << endl;
+          Word w = nextline.substr(2);
+          if (tree->find(w.getWord()) == true) {
+            Word* wp = tree->get(w);
+            wp->incrementCount();
+            cout << "WORD " << w.getWord() << " INCREMENTED" << endl;
           } else {
-            Word w = nextline.substr(2);
-            if (tree->find(w) == true) {
-              w.incrementCount();
-              cout << "WORD " << w << " INCREMENTED" << endl;
-            } else {
-              tree->insert(w);
-              cout << "WORD " << w << " INSERTED" << endl;
-            }
+            tree->insert(w);
+            cout << "WORD " << w.getWord() << " INSERTED" << endl;
           }
-        } else if (nextline.at(0) == 'F') {
-          if (tree == nullptr) {
-            cout << "MUST CREATE TREE INSTANCE" << endl;
-          } else {
-            Word w = nextline.substr(2);
-            if (tree->find(w) == true) {
-              cout << "FOUND " << w << endl;
-            } else if (tree->find(w) == false) {
-              cout << w << "NOT FOUND" << endl;
-            } else if (tree->getSize() == 0) {
-              cout << "TREE EMPTY" << endl;
-            }
-          }
-        } else if (nextline.at(0) == 'R') {
-          if (tree == nullptr) {
-            cout << "MUST CREATE TREE INSTANCE" << endl;
-          } else {
-            Word w = nextline.substr(2);
-            if (tree->remove(w) == true) {
-              cout << "REMOVED " << w << endl;
-            } else if (tree->remove(w) == false) {
-              cout << w << "NOT FOUND" << endl;
-            } else if (tree->getSize() == 0) {
-              cout << "TREE EMPTY" << endl;
-            }
+        } else if (nextline.at(0) == 'F') {         
+          Word w = nextline.substr(2);
+          if (tree->find(w) == true) {
+            cout << "FOUND " << nextline.substr(2) << endl;
+          } else if (tree->find(w) == false) {
+            cout << w.getWord() << " NOT FOUND" << endl;
+          } else if (tree->getSize() == 0) {
+            cout << "TREE EMPTY" << endl;
+          }   
+        } else if (nextline.at(0) == 'R') {        
+          Word w = nextline.substr(2);
+          if (tree->remove(w) == true) {
+            cout << "REMOVED " << w.getWord() << endl;
+          } else if (tree->remove(w) == false) {
+            cout << w.getWord() << "NOT FOUND" << endl;
+          } else if (tree->getSize() == 0) {
+            cout << "TREE EMPTY" << endl;
           }
         } else if (nextline.at(0) == 'G') {
-          if (tree == nullptr) {
-            cout << "MUST CREATE TREE INSTANCE" << endl;
-          } else {
-            Word w = nextline.substr(2);
-            if (tree->get(w)) {
-              cout << "GOT " << w << " " << w.getCount();
-            } else if (tree->get(w) == nullptr) {
-              cout << w << " NOT FOUND" << endl;
-            } else if (tree->getSize() == 0) {
-              cout << "TREE EMPTY" << endl;
-            }
+          Word w = nextline.substr(2);
+          Word* wp = tree->get(w);
+          if (tree->get(w)) {
+            cout << "GOT " << *wp << endl;
+          } else if (tree->get(w) == nullptr) {
+            cout << w.getWord() << " NOT FOUND" << endl;
+          } else if (tree->getSize() == 0) {
+            cout << "TREE EMPTY" << endl;
           }
         } else if (nextline.at(0) == 'N') {
-          if (tree == nullptr) {
-            cout << "MUST CREATE TREE INSTANCE" << endl;
-          } else {
-            cout << tree->getSize();
-          }
+          cout << "TREE SIZE IS " << tree->getSize() << endl;
         } else if (nextline.at(0) == 'O') {
-          
+          tree->printInOrder();
+        } else if (nextline.at(0) == 'E') {
+          tree->printReverseOrder();
         }
       }
 
@@ -111,11 +93,3 @@ int main(int argc, char* argv[]) {
     cout << "Usage: " << argv[0] << " INPUT_FILE" << endl;
   }
 }
-
-
-
-/* 
-If (tree == nullptr && nextline.at(0) != 'C') {
-return "MUST CREATE TREE INSTANCE";
-}
-*/
